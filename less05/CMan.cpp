@@ -14,11 +14,10 @@ CMan::CMan() {
 	cm_adr = NULL;
 }
 
-CMan::CMan(string f, string i, string o, const CDate & dat, char *adr) : cmBirth(dat) {
+CMan::CMan(string f, string i, string o, const CDate & dat, char *adr) : cm_Birth(dat) {
 	cm_f = f;
 	cm_i = i;
 	cm_o =o;
-	//cm_adr == NULL;
 	cm_adr = new char[strlen(adr) + 1];
 	strcpy_s(cm_adr, strlen(adr) + 1, adr);
 }
@@ -28,19 +27,42 @@ CMan::~CMan() {
 		delete cm_adr;
 }
 
-ostream & operator << (ostream & cout, CMan & obj) {
-	cout << setfill(' ') << setw(20) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << ".";
-//	cout << obj.cmBirth;
-//	cout << setfill(' ') << setw(36) << left << obj.cm_adr;
-	cout << endl;
-/*	cout << "Полная информация:" << endl;
-	cout << "Фамилия: " << obj.cm_f << endl;
-	cout << "Имя: " << obj.cm_i << endl;
-	cout << "Отчество: " << obj.cm_o << endl;
+void CMan::setFam(string s) {
+	cm_f = s;
+}
+
+void CMan::setName(string s) {
+	cm_i = s;
+}
+
+void CMan::setPatr(string s) {
+	cm_o = s;
+}
+
+void CMan::setBirth(CDate & dat) {
+	cm_Birth = dat; // нужна перегрузка оператора присваивания?
+}
+
+void CMan::setAdr(const char * s) {
+	delete cm_adr;
+	cm_adr = new char[strlen(s) + 1];
+	strcpy_s(cm_adr, strlen(s) + 1, s);
+}
+
+void CMan::ViewMan() {
+	cout << "Полная информация:" << endl;
+	cout << "Фамилия: " << cm_f << endl;
+	cout << "Имя: " << cm_i << endl;
+	cout << "Отчество: " << cm_o << endl;
 	cout << "Дата рождения: ";
-	cout << setfill('0') << setw(2) << obj.cm_d << ".";
-	cout << setfill('0') << setw(2) << obj.cm_m << ".";
-	cout << setfill('0') << setw(4) << obj.cm_y << endl;
-	cout << "Адрес: " << obj.cm_adr << endl;*/
+	cout << cm_Birth << endl;
+	cout << "Адрес: " << cm_adr << endl;
+}
+
+ostream & operator << (ostream & cout, CMan & obj) {
+	cout << setfill(' ') << setw(20) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
+	cout << obj.cm_Birth << " ";
+	cout << setfill(' ') << setw(36) << left << obj.cm_adr;
+	cout << endl;
 	return cout;
 }
