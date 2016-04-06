@@ -24,5 +24,8 @@ public:
 	CDate getDate();
 	int AgeMan();
 	void ViewMan();
+	int Compare(char *, int);
+	int Compare(CMan &, int);
+	//int CheckExpression(CMan &); // Привести к стандарту -1 0 1 и вынести в CMan
 	friend ostream & operator << (ostream & cout, CMan & obj);
 };

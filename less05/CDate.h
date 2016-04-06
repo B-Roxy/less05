@@ -8,12 +8,12 @@ class CDate {
 	int cdDay;
 	int cdMonth;
 	int cdYear;
-	//char * intToChar(int number, int size); //
+	char * intToChar(int number, int size); //
 public:
 	CDate();
 	CDate(int, int, int);
 	~CDate();
-//	char * dateToChar(int, int, int); // преобразует дату в строковое представление yyyyMMdd
+	char * dateToChar(); // преобразует дату в строковое представление ddMMyyyy
 	static void CheckInitTime();
 	static bool CheckRangeDate(int, int, int); // проверяет корректность составляющих даты
 	bool operator > (CDate &);

@@ -67,8 +67,62 @@ void CMan::ViewMan() {
 	cout << "Адрес: " << cm_adr << endl;
 }
 
+int CMan::Compare(char * s, int key) {
+	int res;
+	switch (key) {
+		case 1: {
+			res = _strcmpi(cm_f.c_str(), s);
+			break;
+		}
+		case 2: {
+			res = _strcmpi(cm_i.c_str(), s);
+			break;
+		}
+		case 3: {
+			res = _strcmpi(cm_o.c_str(), s);
+			break;
+		}
+		case 4: {
+			res = _strcmpi(cm_adr, s);
+			break;
+		}
+		case 5: {
+			res = _strcmpi(cm_Birth.dateToChar(), s);
+			break;
+		}
+	}
+	return res;
+}
+
+int CMan::Compare(CMan & obj, int key) {
+	int res;
+	switch (key) {
+		case 1: {
+			res = cm_f.compare(obj.cm_f);
+			break;
+		}
+		case 2: {
+			res = cm_i.compare(obj.cm_i);
+			break;
+		}
+		case 3: {
+			res = cm_o.compare(obj.cm_o);
+			break;
+		}
+		case 4: {
+			res = _strcmpi(cm_adr, obj.cm_adr);
+			break;
+		}
+		case 5: {
+			res = _strcmpi(cm_Birth.dateToChar(),obj.cm_Birth.dateToChar());
+			break;
+		}
+	}
+	return res;
+}
+
 ostream & operator << (ostream & cout, CMan & obj) {
-	cout << setfill(' ') << setw(20) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
+	cout << setfill(' ') << setw(22) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
 	cout << obj.cm_Birth << " ";
 	cout << setfill(' ') << setw(36) << left << obj.cm_adr;
 	cout << endl;

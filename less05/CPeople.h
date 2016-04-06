@@ -8,20 +8,18 @@
 class CPeople{
 	unsigned int size, maxSize;
 	CMan **arPeople; 
-	//int CheckExpression(CMan, CMan); // Привести к стандарту -1 0 1 и вынести в CMan
 public:
 	CPeople();
 	~CPeople();
 	void InsertMan(string, string, string, CDate, char *); 
 	bool DeleteMan(int);
-	void EditMan(int);
+	void EditMan(int, int, string);
 	void ViewMan(int);
 	int GetSize();
-//	void FindOldMan();
-//	void Sort(char, int);
-//	void Find(char *, int);
-//	void FindByDate(int, int, int, int);
-//	int AvarageAge();
+	void FindOldMan();
+	void Sort(int, int);
+	void Find(char *, int);
+	int AvarageAge();
 	friend ostream & operator << (ostream &, CPeople &);
 };
 

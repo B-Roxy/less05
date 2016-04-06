@@ -3,25 +3,27 @@
 tm *CDate::tm_now = NULL;
 
 /**
-Метод преобразует дату в строковое представление yyyyMMdd
+Метод преобразует дату в строковое представление dd/MM/yyyy
 \param y год
 \param m месяц
 \param d день
 \return указатель на строку
 */
-/*char * CDate::dateToChar(int d, int m, int y) {
+char * CDate::dateToChar() {
 	char *str;
 	char *buffer;
-	str = new char[9];
+	str = new char[11];
 	str[0] = '\0';
-	buffer = intToChar(y, 4);
-	strcat_s(str, 9, buffer);
-	buffer = intToChar(m, 2);
-	strcat_s(str, 9, buffer);
-	buffer = intToChar(d, 2);
-	strcat_s(str, 9, buffer);
+	buffer = intToChar(cdDay, 2);
+	strcat_s(str, 11, buffer);
+	strcat_s(str, 11, "/");
+	buffer = intToChar(cdMonth, 2);
+	strcat_s(str, 11, buffer);
+	strcat_s(str, 11, "/");
+	buffer = intToChar(cdYear, 4);
+	strcat_s(str, 11, buffer);
 	return str;
-}*/
+}
 
 /**
 Метод преобразует число в строку.
@@ -30,7 +32,7 @@ tm *CDate::tm_now = NULL;
 в случае, если число состоит из одного символа, добавляет в начале строки 0
 \return указатель на строку
 */
-/*char * CDate::intToChar(int number, int size) {
+char * CDate::intToChar(int number, int size) {
 	int i, count;
 	char *s;
 
@@ -46,8 +48,7 @@ tm *CDate::tm_now = NULL;
 	}
 	s[size] = '\0';
 	return s;
-}*/
-
+}
 
 /**
 Метод проверяет корректность даты
@@ -59,14 +60,14 @@ tm *CDate::tm_now = NULL;
 1 - в случае ошибки (данные выходят за допустимый диапазон значений)
 */
 bool CDate::CheckRangeDate(int d, int m, int y) {
-	// почему бракуется 12/12/2012?
 	int month30[] = { 4, 6, 9, 11 };
 	int i;
+	CDate now;
 
 	CheckInitTime();
 	// что за условие и зачем? - а чтоб люди будущего не регистрировались
-	if ((y > tm_now->tm_year + 1900) || (y == tm_now->tm_year + 1900 && m > tm_now->tm_mon + 1) ||
-		((y == tm_now->tm_year + 1900) && (m == tm_now->tm_mon + 1) && (d > tm_now->tm_mday)))
+	if ((y > now.cdYear) || (y == now.cdYear && m > now.cdMonth) ||
+		(y == now.cdYear && m == now.cdMonth && d > now.cdDay))
 		return false;
 	// границы d, m, y
 	if (d < 1 || d > 31 || m<1 || m>12 || y<1000 || y>9999)
@@ -127,8 +128,9 @@ void CDate::CheckInitTime(){
 }
 
 std::ostream & operator << (std::ostream & cout, CDate & obj) {
-	cout << std::setw(2) << std::setfill('0') << obj.cdDay << "/";
-	cout << std::setw(2) << std::setfill('0') << obj.cdMonth << "/"
+	std::cout.setf(std::ios::right);
+	cout << std::setfill('0') << std::setw(2) << obj.cdDay << "/";
+	cout << std::setfill('0') << std::setw(2) << obj.cdMonth << "/"
 		<< std::setw(4) << obj.cdYear;
 	return cout;
 }
