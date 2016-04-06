@@ -1,0 +1,23 @@
+#pragma once
+#include <ctime>
+#include <iostream>
+#include <iomanip>
+
+class CDate {
+	static tm *tm_now;
+	int cdDay;
+	int cdMonth;
+	int cdYear;
+	//char * intToChar(int number, int size); //
+public:
+	CDate();
+	CDate(int, int, int);
+	~CDate();
+//	char * dateToChar(int, int, int); // преобразует дату в строковое представление yyyyMMdd
+	static void CheckInitTime();
+	static bool CheckRangeDate(int, int, int); // проверяет корректность составляющих даты
+	bool operator > (CDate &);
+	bool operator == (CDate &);
+	int diffDateInDay(); // возвращает разницу между текущей датой и датой this
+	friend std::ostream & operator << (std::ostream & cout, CDate & obj);
+};

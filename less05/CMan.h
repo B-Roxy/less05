@@ -21,6 +21,8 @@ public:
 	void setPatr(string);
 	void setBirth(CDate &);
 	void setAdr(const char *);
+	CDate getDate();
+	int AgeMan();
 	void ViewMan();
 	friend ostream & operator << (ostream & cout, CMan & obj);
 };

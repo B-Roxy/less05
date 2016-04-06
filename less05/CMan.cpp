@@ -49,6 +49,14 @@ void CMan::setAdr(const char * s) {
 	strcpy_s(cm_adr, strlen(s) + 1, s);
 }
 
+CDate CMan::getDate() {
+	return cm_Birth;
+}
+
+int CMan::AgeMan() {
+	return cm_Birth.diffDateInDay();
+}
+
 void CMan::ViewMan() {
 	cout << "Полная информация:" << endl;
 	cout << "Фамилия: " << cm_f << endl;
