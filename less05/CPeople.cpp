@@ -37,10 +37,10 @@ CPeople::~CPeople(){
 		cout << "Данных нет" << endl;
 }
 
-void CPeople::InsertMan(string fam, string name, string patr, CDate dat, char *adr){
+void CPeople::InsertMan(string fam, string name, string patr, CDate dat, const char *adr){
 	if (size == 0)
 		arPeople = new CMan *[maxSize];
-	if (size == maxSize - 1) {
+	if (size == maxSize) {
 			maxSize *= 2;
 			CMan **t_obj = new CMan *[maxSize];
 			for (int i = 0; i < size; i++)
@@ -50,6 +50,7 @@ void CPeople::InsertMan(string fam, string name, string patr, CDate dat, char *a
 	}
 	arPeople[size] = new CMan(fam, name, patr, dat, adr);
 	size++;
+	cerr << "Add" << endl;
 }
 
 bool CPeople::DeleteMan(int indx){
@@ -107,25 +108,33 @@ int CPeople::GetSize(){
 */
 void CPeople::FindOldMan() {
 	int i;
+	vector<int> indxs;
 		
 	if (size == 0)
 		return;
 	CDate dat(arPeople[0]->getDate());
+	indxs.push_back(0);
 	for (i = 1; i < size; i++) 
-		if (dat > arPeople[i]->getDate())
+		if (dat < arPeople[i]->getDate()) {
+			indxs.clear();
 			dat = arPeople[i]->getDate();
-	cout << "Нашли:\n";
-	for (i = 0; i < size; i++)
-		if (arPeople[i]->getDate() == dat) {
-			ViewMan(i);
-			cout<<"--------\n";
+			indxs.push_back(i);
 		}
+		else if (dat == arPeople[i]->getDate())
+			indxs.push_back(i);
+			
+	cout << "Нашли:\n";
+	for (i = 0; i < indxs.size(); i++){
+		ViewMan(indxs[i]);
+		cout<<"--------\n";
+	}
 }
 
-
-void CPeople::Sort(int key, int way){
+void CPeople::Sort(int key, int way/*, int left = 0, int right = -1*/){ // way = -1 - возрастание, 1 - убывание
 	int found;
-
+	 
+	/*if (right == -1)
+		right = size;*/
 	do {
 		found = 0;
 		for (int i = 0; i < size - 1; i++) {
@@ -139,9 +148,9 @@ void CPeople::Sort(int key, int way){
 				else {
 					// иначе, если фамилии совпадают, сортируем по имени
 					if ((way == 1 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 && 
-						 arPeople[i]->Compare(*arPeople[i + 1], 2) > 0) ||
+						 arPeople[i]->Compare(*arPeople[i + 1], key + 1) > 0) ||
 						(way == 2 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 && 
-						 arPeople[i]->Compare(*arPeople[i + 1], 2) < 0)) {
+						 arPeople[i]->Compare(*arPeople[i + 1], key + 1) < 0)) {
 						swap(arPeople[i], arPeople[i + 1]);
 						found++;
 					}
@@ -190,11 +199,61 @@ int CPeople::AvarageAge(){
 	long avg = 0;
 	
 	for (i; i < size; i++) {
-		// считаем возраст человека
+		// считаем сумму лет
 		avg += arPeople[i]->AgeMan();
 	}
 	avg /= size;
 	return avg;
+}
+
+void CPeople::inTxt(string fname) {
+	ofstream ftxt;
+
+	if (size == 0) {
+		cout << "Записей нет. Запись не возможна" << endl;
+		return;
+	}
+
+	ftxt.open(fname, ios::in);
+	if (ftxt.is_open()) {
+		ftxt.close();
+		char f;
+		cout << "Такой файл существует." << endl;
+		do {
+			cout << "Перезаписать - Y/ дописать - N: ";
+			cin >> f;
+		} while (f != 'Y' && f != 'y' && f != 'N' && f != 'n');
+		if (f == 'Y' || f == 'y')
+			ftxt.open(fname);
+		if (f == 'N' || f == 'n')
+			ftxt.open(fname, ios::app);
+	}
+	else 
+		ftxt.open(fname);
+
+	for (int i = 0; i < size; i++) 
+		ftxt << (*arPeople[i]);//->allData('|');
+	ftxt.close();
+	cout << "Сохранение закончено" << endl;
+}
+
+CPeople & CPeople::fromTxt(string fname) {
+	ifstream ftxt;
+	char c;
+	CPeople tP;
+	string fam, name, patr, dat, adr;
+
+	ftxt.open(fname);
+	while (!ftxt.eof()) {
+		getline(ftxt, fam, '|');
+		getline(ftxt, name, '|');
+		getline(ftxt, patr, '|');
+		getline(ftxt, dat, '|');
+		getline(ftxt, adr);
+		tP.InsertMan(fam, name, patr, CDate(stoi(dat.substr(0,2)), stoi(dat.substr(3,2)), stoi(dat.substr(6,4))), adr.c_str());
+	};
+	cout << "Загрузка закончена" << endl;
+	return tP;
 }
 
 ostream & operator << (ostream & cout, CPeople & obj) {

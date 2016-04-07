@@ -14,7 +14,7 @@ CMan::CMan() {
 	cm_adr = NULL;
 }
 
-CMan::CMan(string f, string i, string o, const CDate & dat, char *adr) : cm_Birth(dat) {
+CMan::CMan(string f, string i, string o, const CDate & dat, const char *adr) : cm_Birth(dat) {
 	cm_f = f;
 	cm_i = i;
 	cm_o =o;
@@ -121,10 +121,22 @@ int CMan::Compare(CMan & obj, int key) {
 	return res;
 }
 
+string CMan::allData(char c) {
+	c = (c == ' ' || c == '/') ? '|' : c;
+	return cm_f + c + cm_i + c +cm_o + c + cm_Birth.dateToChar() + c + cm_adr + '\n';
+}
+
 ostream & operator << (ostream & cout, CMan & obj) {
 	cout << setfill(' ') << setw(22) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
 	cout << obj.cm_Birth << " ";
 	cout << setfill(' ') << setw(36) << left << obj.cm_adr;
 	cout << endl;
 	return cout;
+}
+
+ofstream & operator << (ofstream & fout, CMan & obj) {
+	
+	fout << obj.cm_f << "|" << obj.cm_i << "|";
+
+	return fout;
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include "CMan.h"
+#include <fstream>
+#include <vector>
 
 // Почему бы swap не сделать внутри CMan?
 // Проверка коррекности данных должна быть в CMan, а не в CPeople
@@ -11,7 +13,7 @@ class CPeople{
 public:
 	CPeople();
 	~CPeople();
-	void InsertMan(string, string, string, CDate, char *); 
+	void InsertMan(string, string, string, CDate, const char *); 
 	bool DeleteMan(int);
 	void EditMan(int, int, string);
 	void ViewMan(int);
@@ -20,6 +22,8 @@ public:
 	void Sort(int, int);
 	void Find(char *, int);
 	int AvarageAge();
+	void inTxt(string);
+	CPeople & fromTxt(string);
 	friend ostream & operator << (ostream &, CPeople &);
 };
 

@@ -56,8 +56,8 @@ char * CDate::intToChar(int number, int size) {
 \param month месяц
 \param year год
 \return возвращает
-0 - в случае корректности даты
-1 - в случае ошибки (данные выходят за допустимый диапазон значений)
+	true - в случае корректности даты
+	false - в случае ошибки (данные выходят за допустимый диапазон значений)
 */
 bool CDate::CheckRangeDate(int d, int m, int y) {
 	int month30[] = { 4, 6, 9, 11 };
@@ -81,12 +81,9 @@ bool CDate::CheckRangeDate(int d, int m, int y) {
 			return false;
 	return true;
 }
-bool CDate::operator > (CDate & obj) {
-	if (cdYear > obj.cdYear || 
-		(cdYear == obj.cdYear && cdMonth > obj.cdMonth) || 
-		(cdYear == obj.cdYear && cdMonth == obj.cdMonth && cdDay > obj.cdDay))
-		return true;
-	return false;
+bool CDate::operator < (CDate & obj) {
+	return (cdYear < obj.cdYear || (cdYear == obj.cdYear && cdMonth < obj.cdMonth) || 
+			(cdYear == obj.cdYear && cdMonth == obj.cdMonth && cdDay < obj.cdDay));
 }
 bool CDate::operator==(CDate & dat) {
 	if (cdDay == dat.cdDay && cdMonth == dat.cdMonth && cdYear == dat.cdYear)
@@ -99,7 +96,7 @@ int CDate::diffDateInDay() {
 
 	delta = now.cdYear - cdYear;
 	if (cdMonth > now.cdMonth || (cdDay > now.cdDay && cdMonth == now.cdMonth)) 
-		// кооректируем дату, если dd или dd.mm в этом году еще не прошел
+		// корректируем дату, если dd или dd.mm в этом году еще не прошел
 		delta -= 1;
 	return delta;
 }
