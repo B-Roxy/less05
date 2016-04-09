@@ -1,26 +1,5 @@
 #include "CPeople.h"
 
-/**
-\brief Функция сравнивает dd.MM.yyyy двух структур
-\param t1 - объект 1
-\param t2 - объект 2
-\return
-0 - t1.dd/MM/yyyy == t2.dd/MM/yyyy
--1 - t1.dd/MM/yyyy < t2.dd/MM/yyyy
-1 - t1.dd/MM/yyyy > t2.dd/MM/yyyy
-*/
-/*int CPeople::CheckExpression(CMan t1, CMan t2) {
-	if (t1.cm_y < t2.cm_y ||
-		(t1.cm_y == t2.cm_y && t1.cm_m < t2.cm_m) ||
-		(t1.cm_y == t2.cm_y && t1.cm_m == t2.cm_m && t1.cm_d < t2.cm_d))
-		return -1;
-	if (t1.cm_y > t2.cm_y ||
-		(t1.cm_y == t2.cm_y && t1.cm_m > t2.cm_m) ||
-		(t1.cm_y == t2.cm_y && t1.cm_m == t2.cm_m && t1.cm_d > t2.cm_d))
-		return 1;
-	return 0;
-}*/
-
 CPeople::CPeople(){
 	arPeople = NULL;
 	maxSize = 2;
@@ -50,17 +29,11 @@ void CPeople::InsertMan(string fam, string name, string patr, CDate dat, const c
 	}
 	arPeople[size] = new CMan(fam, name, patr, dat, adr);
 	size++;
-	cerr << "Add" << endl;
 }
 
 bool CPeople::DeleteMan(int indx){
-	CMan **t_obj = new CMan *[size - 1];
-	for (int i = 0; i < indx; i++)
-		t_obj[i] = arPeople[i];
-	for (int i = indx + 1; i < size; i++)
-		t_obj[i - 1] = arPeople[i];
-	delete[] arPeople;
-	arPeople = t_obj;
+	for (int i = indx; i < size - 1; i++)
+		arPeople[i] = arPeople[i + 1];
 	size--;
 	return true;
 }
@@ -130,43 +103,17 @@ void CPeople::FindOldMan() {
 	}
 }
 
-void CPeople::Sort(int key, int way/*, int left = 0, int right = -1*/){ // way = -1 - возрастание, 1 - убывание
+void CPeople::Sort(int key, int way, int left = 0, int right = -1){ // way = 1 - возрастание, -1 - убывание
 	int found;
+	map<string, int> duplicate; 
 	 
-	/*if (right == -1)
-		right = size;*/
+	if (right == -1)
+		right = size;
 	do {
 		found = 0;
-		for (int i = 0; i < size - 1; i++) {
-			if ( key == 1) {
-				// сортируем по фамилии
-				if ((way == 1 && arPeople[i]->Compare(*arPeople[i + 1], key) > 0) || 
-					(way == 2 && arPeople[i]->Compare(*arPeople[i + 1], key) < 0)) {
-					swap(arPeople[i], arPeople[i + 1]);
-					found++;
-				}
-				else {
-					// иначе, если фамилии совпадают, сортируем по имени
-					if ((way == 1 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 && 
-						 arPeople[i]->Compare(*arPeople[i + 1], key + 1) > 0) ||
-						(way == 2 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 && 
-						 arPeople[i]->Compare(*arPeople[i + 1], key + 1) < 0)) {
-						swap(arPeople[i], arPeople[i + 1]);
-						found++;
-					}
-					// если фамилия и имя совпадают, сортируем по отчеству
-					if ((way == 1 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 &&
-						arPeople[i]->Compare(*arPeople[i + 1], 2) == 0 && arPeople[i]->Compare(*arPeople[i + 1], 3) > 0) ||
-						(way == 2 && arPeople[i]->Compare(*arPeople[i + 1], key) == 0 &&
-						 arPeople[i]->Compare(*arPeople[i + 1], 2) == 0 && arPeople[i]->Compare(*arPeople[i + 1], 3) < 0)) {
-						swap(arPeople[i], arPeople[i + 1]);
-						found++;
-					}
-				}
-			}
-			// сортируем по месту жительства и  по дате рождения
-			if ((key == 2 || key == 3) && ((way == 1 && arPeople[i]->Compare(*arPeople[i + 1], key) >0) || 
-				(way == 2 && arPeople[i]->Compare(*arPeople[i + 1], key) < 0))) {
+		for (int i = left, res; i < right - 1; i++) {
+			res = arPeople[i]->Compare(*arPeople[i + 1], key);
+			if (way == res) {
 				swap(arPeople[i], arPeople[i + 1]);
 				found++;
 			}
@@ -230,30 +177,41 @@ void CPeople::inTxt(string fname) {
 	}
 	else 
 		ftxt.open(fname);
-
-	for (int i = 0; i < size; i++) 
-		ftxt << (*arPeople[i]);//->allData('|');
+	save(ftxt);
 	ftxt.close();
 	cout << "Сохранение закончено" << endl;
 }
 
-CPeople & CPeople::fromTxt(string fname) {
+void CPeople::fromTxt(string fname) {
 	ifstream ftxt;
-	char c;
-	CPeople tP;
-	string fam, name, patr, dat, adr;
-
+	
 	ftxt.open(fname);
-	while (!ftxt.eof()) {
-		getline(ftxt, fam, '|');
-		getline(ftxt, name, '|');
-		getline(ftxt, patr, '|');
-		getline(ftxt, dat, '|');
-		getline(ftxt, adr);
-		tP.InsertMan(fam, name, patr, CDate(stoi(dat.substr(0,2)), stoi(dat.substr(3,2)), stoi(dat.substr(6,4))), adr.c_str());
-	};
+	load(ftxt);
+}
+
+void CPeople::save(ofstream & os) {
+	os << size << endl;
+	for (int i = 0; i < size; i++)
+		arPeople[i]->save(os);
+}
+
+void CPeople::load(ifstream & is) {
+	string fam, name, patr, dat, adr;
+	int count, d, m, y;
+
+	is >> count;
+	is.ignore();
+	for (int i = 0; i < count; i++) {
+		getline(is, fam, '|');
+		getline(is, name, '|');
+		getline(is, patr, '|');
+		getline(is, dat, '|');
+		getline(is, adr);
+		InsertMan(fam, name, patr, CDate(stoi(dat.substr(0,2)), stoi(dat.substr(3,2)), stoi(dat.substr(6,4))), adr.c_str());
+	}
+	size = count;
 	cout << "Загрузка закончена" << endl;
-	return tP;
+	is.close();
 }
 
 ostream & operator << (ostream & cout, CPeople & obj) {

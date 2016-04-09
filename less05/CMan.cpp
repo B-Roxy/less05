@@ -118,13 +118,27 @@ int CMan::Compare(CMan & obj, int key) {
 			break;
 		}
 	}
+	if (res > 0) res = 1;
+	if (res < 0) res = -1;
 	return res;
+}
+
+string CMan::getFam() {
+	return cm_f;
 }
 
 string CMan::allData(char c) {
 	c = (c == ' ' || c == '/') ? '|' : c;
 	return cm_f + c + cm_i + c +cm_o + c + cm_Birth.dateToChar() + c + cm_adr + '\n';
 }
+
+void CMan::save(ofstream & os) {
+	os << cm_f << "|" << cm_i << "|" << cm_o << "|";
+	cm_Birth.save(os);
+	os << "|" << cm_adr << endl;
+}
+
+void CMan::load(ifstream & is) {}
 
 ostream & operator << (ostream & cout, CMan & obj) {
 	cout << setfill(' ') << setw(22) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
@@ -135,8 +149,6 @@ ostream & operator << (ostream & cout, CMan & obj) {
 }
 
 ofstream & operator << (ofstream & fout, CMan & obj) {
-	
 	fout << obj.cm_f << "|" << obj.cm_i << "|";
-
 	return fout;
 }

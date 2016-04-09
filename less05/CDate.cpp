@@ -101,6 +101,12 @@ int CDate::diffDateInDay() {
 	return delta;
 }
 
+void CDate::save(std::ofstream & os) {
+	os << dateToChar();
+}
+
+void CDate::load(std::ifstream & is) {}
+
 CDate::CDate(){
 	CheckInitTime();
 	cdDay = tm_now->tm_mday;

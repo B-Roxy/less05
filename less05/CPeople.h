@@ -2,12 +2,10 @@
 #include "CMan.h"
 #include <fstream>
 #include <vector>
+#include <map>
 
-// Почему бы swap не сделать внутри CMan?
-// Проверка коррекности данных должна быть в CMan, а не в CPeople
 // CompareStr - чем плох strcmp?
-// Методы toChar должны быть в CMan
-class CPeople{
+class CPeople: public I_File{
 	unsigned int size, maxSize;
 	CMan **arPeople; 
 public:
@@ -19,11 +17,13 @@ public:
 	void ViewMan(int);
 	int GetSize();
 	void FindOldMan();
-	void Sort(int, int);
+	void Sort(int, int, int, int);
 	void Find(char *, int);
 	int AvarageAge();
 	void inTxt(string);
-	CPeople & fromTxt(string);
+	void fromTxt(string);
+	void save(ofstream& os);
+	void load(ifstream& is);
 	friend ostream & operator << (ostream &, CPeople &);
 };
 

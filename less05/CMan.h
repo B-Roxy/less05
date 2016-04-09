@@ -5,7 +5,7 @@
 #include "CDate.h"
 using namespace std;
 
-class CMan /*: public I_File*/{
+class CMan : public I_File{
 	string cm_f;  // фамилия
 	string cm_i; // имя
 	string cm_o; // отчество
@@ -27,7 +27,10 @@ public:
 	void ViewMan();
 	int Compare(char *, int);
 	int Compare(CMan &, int);
+	string getFam();
 	string allData(char);
+	void save(ofstream& os);
+	void load(ifstream& is);
 	//int CheckExpression(CMan &); // Привести к стандарту -1 0 1 и вынести в CMan
 	friend ostream & operator << (ostream & cout, CMan & obj);
 	friend ofstream & operator << (ofstream & fout, CMan & obj);
