@@ -22,8 +22,12 @@ public:
 	int AvarageAge();
 	void inTxt(string);
 	void fromTxt(string);
+	void inBnry(string);
 	void save(ofstream& os);
 	void load(ifstream& is);
+	void saveBNR(ofstream& os);
+	void loadBNR(ifstream& is);
+	void fromBnry(string);
 	friend ostream & operator << (ostream &, CPeople &);
 };
 

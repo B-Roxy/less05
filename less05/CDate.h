@@ -23,5 +23,7 @@ public:
 	int diffDateInDay(); // возвращает разницу между текущей датой и датой this
 	void save(std::ofstream& os);
 	void load(std::ifstream& is);
+	void saveBNR(std::ofstream& os);
+	void loadBNR(std::ifstream& is);
 	friend std::ostream & operator << (std::ostream & cout, CDate & obj);
 };

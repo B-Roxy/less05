@@ -140,6 +140,36 @@ void CMan::save(ofstream & os) {
 
 void CMan::load(ifstream & is) {}
 
+void CMan::saveBNR(ofstream & os) {
+	int sz, sizes = 0;
+
+	sz = cm_f.length() + 1;
+	sizes +=sz + sizeof(int);
+	os.write((char*)&sz, sizeof(sz)); // записываем размер, занимаемый данными
+	os.write(cm_f.c_str(), sz);       // записываем сами данные
+	cout << "cm_f = " << sz << endl;
+	sz = cm_i.length() + 1;
+	sizes +=sz + sizeof(int);
+	os.write((char*)&sz, sizeof(sz));
+	os.write(cm_i.c_str(), sz);
+	cout << "cm_i = " << sz << endl;
+	sz = cm_o.length() + 1;
+	sizes +=sz + sizeof(int);
+	os.write((char*)&sz, sizeof(sz));
+	os.write(cm_o.c_str(), sz);
+	cout << "cm_o = " << sz << endl;
+	sizes += 3*sizeof(int);
+	cm_Birth.saveBNR(os);
+	sz = strlen(cm_adr) + 1;
+	sizes +=sz + sizeof(int);
+	os.write((char*)&sz, sizeof(sz));
+	os.write(cm_adr, sz);
+	cout << "cm_adr = " << sz << endl;
+	cout << "sizes=" << sizes;
+}
+
+void CMan::loadBNR(ifstream & is) {}
+
 ostream & operator << (ostream & cout, CMan & obj) {
 	cout << setfill(' ') << setw(22) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
 	cout << obj.cm_Birth << " ";

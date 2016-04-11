@@ -107,6 +107,14 @@ void CDate::save(std::ofstream & os) {
 
 void CDate::load(std::ifstream & is) {}
 
+void CDate::saveBNR(std::ofstream & os) {
+	os.write((char*)&cdDay, sizeof(cdDay));
+	os.write((char*)&cdMonth, sizeof(cdMonth));
+	os.write((char*)&cdYear, sizeof(cdYear));
+}
+
+void CDate::loadBNR(std::ifstream & is) {}
+
 CDate::CDate(){
 	CheckInitTime();
 	cdDay = tm_now->tm_mday;

@@ -31,7 +31,8 @@ public:
 	string allData(char);
 	void save(ofstream& os);
 	void load(ifstream& is);
-	//int CheckExpression(CMan &); // Привести к стандарту -1 0 1 и вынести в CMan
+	void saveBNR(ofstream& os);
+	void loadBNR(ifstream& is);
 	friend ostream & operator << (ostream & cout, CMan & obj);
 	friend ofstream & operator << (ofstream & fout, CMan & obj);
 };

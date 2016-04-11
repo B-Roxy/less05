@@ -189,6 +189,36 @@ void CPeople::fromTxt(string fname) {
 	load(ftxt);
 }
 
+void CPeople::inBnry(string fname) {
+	ofstream fbnr;
+
+	if (size == 0) {
+		cout << "Записей нет. Запись не возможна" << endl;
+		return;
+	}
+
+	fbnr.open(fname, ios::binary|ios::in);
+	
+	if (fbnr.is_open()) {
+		fbnr.close();
+		char f;
+		cout << "Такой файл существует." << endl;
+		do {
+			cout << "Перезаписать - Y/ дописать - N: ";
+			cin >> f;
+		} while (f != 'Y' && f != 'y' && f != 'N' && f != 'n');
+		if (f == 'Y' || f == 'y')
+			fbnr.open(fname, ios::binary);
+		if (f == 'N' || f == 'n')
+			fbnr.open(fname, ios::app|ios::binary);
+	}
+	else
+		fbnr.open(fname, ios::binary);
+	saveBNR(fbnr);
+	fbnr.close();
+	cout << "Запись закончена" << endl;
+}
+
 void CPeople::save(ofstream & os) {
 	os << size << endl;
 	for (int i = 0; i < size; i++)
@@ -212,6 +242,45 @@ void CPeople::load(ifstream & is) {
 	size = count;
 	cout << "Загрузка закончена" << endl;
 	is.close();
+}
+
+void CPeople::saveBNR(ofstream & os) {
+	for (int i = 0; i < size; i++)
+		arPeople[i]->saveBNR(os);
+}
+
+void CPeople::loadBNR(ifstream & is) {
+	int sz, d, m, y;
+	char *fam, *name, *patr, *adr;
+	
+	is.read((char*)&sz, sizeof(sz));
+	fam = new char [sz];
+	is.read(fam, sz);
+	is.read((char*)&sz, sizeof(sz));
+	name = new char [sz];
+	is.read(name, sz);
+	is.read((char*)&sz, sizeof(sz));
+	patr = new char [sz];
+	is.read(patr, sz);
+	is.read((char*)&d, sizeof(d));
+	is.read((char*)&m, sizeof(m));
+	is.read((char*)&y, sizeof(y));
+	is.read((char*)&sz, sizeof(sz));
+	adr = new char [sz];
+	is.read(adr, sizeof(sz));
+	cout << fam <<' ' << name <<' ' << patr <<' ' << d << '/' << m << '/' << y << ' ' << adr << endl;
+	delete fam;
+	delete name;
+	delete patr;
+	delete adr;
+}
+
+void CPeople::fromBnry(string fname) {
+	ifstream fbnr;
+
+	fbnr.open(fname, ios::binary);
+	loadBNR(fbnr);
+	fbnr.close();
 }
 
 ostream & operator << (ostream & cout, CPeople & obj) {
