@@ -253,26 +253,27 @@ void CPeople::loadBNR(ifstream & is) {
 	int sz, d, m, y;
 	char *fam, *name, *patr, *adr;
 	
-	is.read((char*)&sz, sizeof(sz));
-	fam = new char [sz];
-	is.read(fam, sz);
-	is.read((char*)&sz, sizeof(sz));
-	name = new char [sz];
-	is.read(name, sz);
-	is.read((char*)&sz, sizeof(sz));
-	patr = new char [sz];
-	is.read(patr, sz);
-	is.read((char*)&d, sizeof(d));
-	is.read((char*)&m, sizeof(m));
-	is.read((char*)&y, sizeof(y));
-	is.read((char*)&sz, sizeof(sz));
-	adr = new char [sz];
-	is.read(adr, sizeof(sz));
-	cout << fam <<' ' << name <<' ' << patr <<' ' << d << '/' << m << '/' << y << ' ' << adr << endl;
-	delete fam;
-	delete name;
-	delete patr;
-	delete adr;
+	while (is.read((char*)&sz, sizeof(sz)) && !is.eof()) {
+		fam = new char[sz];
+		is.read(fam, sz);
+		is.read((char*)&sz, sizeof(sz));
+		name = new char[sz];
+		is.read(name, sz);
+		is.read((char*)&sz, sizeof(sz));
+		patr = new char[sz];
+		is.read(patr, sz);
+		is.read((char*)&d, sizeof(d));
+		is.read((char*)&m, sizeof(m));
+		is.read((char*)&y, sizeof(y));
+		is.read((char*)&sz, sizeof(sz));
+		adr = new char[sz];
+		is.read(adr, sizeof(sz));
+		cout << fam << ' ' << name << ' ' << patr << ' ' << d << '/' << m << '/' << y << ' ' << adr << endl;
+		delete fam;
+		delete name;
+		delete patr;
+		delete adr;
+	}
 }
 
 void CPeople::fromBnry(string fname) {
