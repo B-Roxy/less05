@@ -268,6 +268,7 @@ void CPeople::loadBNR(ifstream & is) {
 		is.read((char*)&sz, sizeof(sz));
 		adr = new char[sz];
 		is.read(adr, sizeof(sz));
+		InsertMan(fam, name, patr, CDate(d, m, y), adr);
 		cout << fam << ' ' << name << ' ' << patr << ' ' << d << '/' << m << '/' << y << ' ' << adr << endl;
 		delete fam;
 		delete name;
