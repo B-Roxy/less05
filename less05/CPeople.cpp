@@ -103,7 +103,7 @@ void CPeople::FindOldMan() {
 	}
 }
 
-void CPeople::Sort(int key, int way, int left = 0, int right = -1){ // way = 1 - возрастание, -1 - убывание
+void CPeople::Sort(int key, int way, int left, int right){ // way = 1 - возрастание, -1 - убывание
 	int found;
 	map<string, int> duplicate; 
 	 
@@ -119,6 +119,7 @@ void CPeople::Sort(int key, int way, int left = 0, int right = -1){ // way = 1 -
 			}
 		}
 	} while (found != 0);
+
 }
 
 /**
@@ -187,6 +188,7 @@ void CPeople::fromTxt(string fname) {
 	
 	ftxt.open(fname);
 	load(ftxt);
+	ftxt.close();
 }
 
 void CPeople::inBnry(string fname) {
@@ -228,52 +230,30 @@ void CPeople::save(ofstream & os) {
 void CPeople::load(ifstream & is) {
 	string fam, name, patr, dat, adr;
 	int count, d, m, y;
-
+	this->~CPeople();
 	is >> count;
 	is.ignore();
-	for (int i = 0; i < count; i++) {
-		getline(is, fam, '|');
-		getline(is, name, '|');
-		getline(is, patr, '|');
-		getline(is, dat, '|');
-		getline(is, adr);
-		InsertMan(fam, name, patr, CDate(stoi(dat.substr(0,2)), stoi(dat.substr(3,2)), stoi(dat.substr(6,4))), adr.c_str());
-	}
 	size = count;
-	cout << "Загрузка закончена" << endl;
-	is.close();
+	arPeople = new CMan*[size];
+	for (int i = 0; i < size; i++) {
+		arPeople[i] = new CMan();
+		arPeople[i]->load(is);
+	}
 }
 
 void CPeople::saveBNR(ofstream & os) {
+	os.write((char*)&size, sizeof(size));
 	for (int i = 0; i < size; i++)
 		arPeople[i]->saveBNR(os);
 }
 
 void CPeople::loadBNR(ifstream & is) {
-	int sz, d, m, y;
-	char *fam, *name, *patr, *adr;
-	
-	while (is.read((char*)&sz, sizeof(sz)) && !is.eof()) {
-		fam = new char[sz];
-		is.read(fam, sz);
-		is.read((char*)&sz, sizeof(sz));
-		name = new char[sz];
-		is.read(name, sz);
-		is.read((char*)&sz, sizeof(sz));
-		patr = new char[sz];
-		is.read(patr, sz);
-		is.read((char*)&d, sizeof(d));
-		is.read((char*)&m, sizeof(m));
-		is.read((char*)&y, sizeof(y));
-		is.read((char*)&sz, sizeof(sz));
-		adr = new char[sz];
-		is.read(adr, sizeof(sz));
-		InsertMan(fam, name, patr, CDate(d, m, y), adr);
-		cout << fam << ' ' << name << ' ' << patr << ' ' << d << '/' << m << '/' << y << ' ' << adr << endl;
-		delete fam;
-		delete name;
-		delete patr;
-		delete adr;
+	this->~CPeople();
+	is.read((char*)&size, sizeof(size));
+	arPeople = new CMan*[size];
+	for (int i = 0; i < size; i++) {
+		arPeople[i] = new CMan();
+		arPeople[i]->loadBNR(is);
 	}
 }
 

@@ -4,7 +4,6 @@
 #include <vector>
 #include <map>
 
-// CompareStr - чем плох strcmp?
 class CPeople: public I_File{
 	unsigned int size, maxSize;
 	CMan **arPeople; 
@@ -17,7 +16,7 @@ public:
 	void ViewMan(int);
 	int GetSize();
 	void FindOldMan();
-	void Sort(int, int, int, int);
+	void Sort(int, int, int left = 0, int right = -1);
 	void Find(char *, int);
 	int AvarageAge();
 	void inTxt(string);

@@ -102,10 +102,13 @@ int CDate::diffDateInDay() {
 }
 
 void CDate::save(std::ofstream & os) {
-	os << dateToChar();
+	os << dateToChar() << "|";
 }
 
-void CDate::load(std::ifstream & is) {}
+void CDate::load(std::ifstream & is) {
+	char c;
+	is >> cdDay >> c >> cdMonth >> c >> cdYear >> c;  
+}
 
 void CDate::saveBNR(std::ofstream & os) {
 	os.write((char*)&cdDay, sizeof(cdDay));
@@ -113,7 +116,11 @@ void CDate::saveBNR(std::ofstream & os) {
 	os.write((char*)&cdYear, sizeof(cdYear));
 }
 
-void CDate::loadBNR(std::ifstream & is) {}
+void CDate::loadBNR(std::ifstream & is) {
+	is.read((char*)&cdDay, sizeof(cdDay));
+	is.read((char*)&cdMonth, sizeof(cdMonth));
+	is.read((char*)&cdYear, sizeof(cdYear));
+}
 
 CDate::CDate(){
 	CheckInitTime();

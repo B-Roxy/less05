@@ -135,40 +135,65 @@ string CMan::allData(char c) {
 void CMan::save(ofstream & os) {
 	os << cm_f << "|" << cm_i << "|" << cm_o << "|";
 	cm_Birth.save(os);
-	os << "|" << cm_adr << endl;
+	os << cm_adr << endl;
 }
 
-void CMan::load(ifstream & is) {}
+void CMan::load(ifstream & is) {
+	char buf[256];
+
+	is.getline(buf, 256, '|');
+	cm_f = buf;
+	is.getline(buf, 256, '|');
+	cm_i = buf;
+	is.getline(buf, 256, '|');
+	cm_o = buf;
+	cm_Birth.load(is);
+	is.getline(buf, 256);
+	if (cm_adr != NULL)
+		delete cm_adr;
+	cm_adr = new char[strlen(buf) + 1];
+	strcpy_s(cm_adr, strlen(buf) + 1, buf);
+}
 
 void CMan::saveBNR(ofstream & os) {
-	int sz, sizes = 0;
+	int sz;
 
 	sz = cm_f.length() + 1;
-	sizes +=sz + sizeof(int);
 	os.write((char*)&sz, sizeof(sz)); // записываем размер, занимаемый данными
 	os.write(cm_f.c_str(), sz);       // записываем сами данные
-	cout << "cm_f = " << sz << endl;
 	sz = cm_i.length() + 1;
-	sizes +=sz + sizeof(int);
 	os.write((char*)&sz, sizeof(sz));
 	os.write(cm_i.c_str(), sz);
-	cout << "cm_i = " << sz << endl;
 	sz = cm_o.length() + 1;
-	sizes +=sz + sizeof(int);
 	os.write((char*)&sz, sizeof(sz));
 	os.write(cm_o.c_str(), sz);
-	cout << "cm_o = " << sz << endl;
-	sizes += 3*sizeof(int);
 	cm_Birth.saveBNR(os);
 	sz = strlen(cm_adr) + 1;
-	sizes +=sz + sizeof(int);
 	os.write((char*)&sz, sizeof(sz));
 	os.write(cm_adr, sz);
-	cout << "cm_adr = " << sz << endl;
-	cout << "sizes=" << sizes;
 }
 
-void CMan::loadBNR(ifstream & is) {}
+void CMan::loadBNR(ifstream & is) {
+	int sz;
+	char buf[256];
+	
+	is.read((char*)&sz, sizeof(sz));
+	is.read(buf, sz);
+	cm_f = buf;
+	is.read((char*)&sz, sizeof(sz));
+	is.read(buf, sz);
+	cm_i = buf;
+	is.read((char*)&sz, sizeof(sz));
+	is.read(buf, sz);
+	cm_o = buf;
+	cm_Birth = CDate();
+	cm_Birth.loadBNR(is);
+	is.read((char*)&sz, sizeof(sz));
+	if (cm_adr != NULL)
+		delete cm_adr;
+	cm_adr = new char[sz];
+	is.read(cm_adr, sizeof(sz));
+}
 
 ostream & operator << (ostream & cout, CMan & obj) {
 	cout << setfill(' ') << setw(22) << obj.cm_f << " " << obj.cm_i[0] << "." << obj.cm_o[0] << " ";
